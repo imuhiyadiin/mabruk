@@ -1,0 +1,166 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  STRIPE
+  CARD
+  VISA
+  MASTER_CARD
+}
+
+enum ProductStatus {
+  ACTIVE
+  OUT_OF_STOCK
+  INACTIVE
+  DELETED
+}
+
+// model User
+
+model User {
+  id        String     @id @default(uuid())
+  fullname  String
+  email     String     @unique
+  password  String
+  role      Role       @default(USER)
+  permissions Json?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  cart      Cart?
+  Category  Category[]
+  Product   Product[]
+  Payment   Payment[]
+  cartItem  CartItem[]
+  Order     Order[]
+}
+
+// category model
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String?   @unique
+  description String?
+  imageUrl    String?
+  isActive    Boolean   @default(true)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Product     Product[]
+}
+
+// product model
+
+model Product {
+  id          String        @id @default(uuid())
+  name        String
+  slug        String?       @unique
+  price       Float
+  imageUrl    String
+  description String?
+  quantity    Int
+  status      ProductStatus @default(ACTIVE)
+  color       String?
+  size        String?
+  userId      String
+  categoryId  String
+  category    Category      @relation(fields: [categoryId], references: [id])
+  user        User          @relation(fields: [userId], references: [id])
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  CartItem  CartItem[]
+}
+
+// cart model
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  cartItem  CartItem[]
+}
+
+// cartItem
+
+model CartItem {
+  id        String   @id @default(uuid())
+  quanity   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId    String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+// model order
+
+model Order {
+  id          String    @id @default(uuid())
+  totalAmount Float
+  discount    Float?
+  tax         Float?
+  ispaid      Boolean   @default(false)
+  items       Json[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  status      String    @default("PENDING")
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  paymentStatus String  @default("PENDING")
+  paymentMethod String?
+  Payment     Payment[]
+}
+
+// model payment
+
+model Payment {
+  id                String        @id @default(uuid())
+  amount            Float
+  orderId           String
+  userId            String
+  paymentMethod     PaymentMethod @default(STRIPE)
+  status            PaymentStatus @default(PENDING)
+  transactionId     String?       @unique
+  paymentIntentId   String?       @unique
+  description       String?
+  paidAt            DateTime?
+  user              User          @relation(fields: [userId], references: [id])
+  order             Order         @relation(fields: [orderId], references: [id])
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([orderId])
+}
