@@ -5,14 +5,6 @@ import prisma from "../lip/prisma";
 //create category
 export const createCategory = async (req: AuthRequest, res: Response) => {
   try {
-    // admin only
-
-    if (req.user?.role !== "ADMIN") {
-      return res.status(405).json({
-        message: "don't have access this operation",
-      });
-    }
-
     const { name, description, image } = req.body;
     const categoryName = typeof name === "string" ? name.trim() : "";
     if (!categoryName) {

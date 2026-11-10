@@ -42,6 +42,18 @@ type CategoryResponse = {
   result?: Category[] | Category;
 };
 
+async function readCategoryResponse(response: Response): Promise<CategoryResponse> {
+  if (!(response.headers.get("content-type") ?? "").includes("application/json")) {
+    throw new Error(`API-ga categories-ku JSON ma soo celin (HTTP ${response.status}). Hubi backend-ka iyo API URL-ka.`);
+  }
+
+  try {
+    return (await response.json()) as CategoryResponse;
+  } catch {
+    throw new Error(`Jawaabta API-ga categories-ku ma ahayn JSON sax ah (HTTP ${response.status}).`);
+  }
+}
+
 const categoryFilters = ["All Categories", "With Products", "Empty Categories"] as const;
 type CategoryFilter = (typeof categoryFilters)[number];
 
@@ -102,7 +114,7 @@ export default function CategoryTable() {
     setError("");
     try {
       const response = await fetch(`${getApiBase()}/category`, { cache: "no-store" });
-      const payload = (await response.json()) as CategoryResponse;
+      const payload = await readCategoryResponse(response);
       if (!response.ok || !Array.isArray(payload.result)) {
         throw new Error(payload.message ?? "Categories lama soo shubi karin.");
       }
@@ -214,7 +226,7 @@ export default function CategoryTable() {
           image: imageUrl.trim(),
         }),
       });
-      const payload = (await response.json()) as CategoryResponse;
+      const payload = await readCategoryResponse(response);
       if (!response.ok || !payload.result || Array.isArray(payload.result)) {
         throw new Error(payload.message ?? (editingCategory ? "Category-ga lama cusboonaysiin karin." : "Category-ga lama abuuri karin."));
       }

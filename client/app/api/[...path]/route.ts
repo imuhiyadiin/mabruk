@@ -18,7 +18,7 @@ const hopByHopHeaders = new Set([
 async function proxyApiRequest(request: NextRequest) {
   const backendUrl =
     process.env.SERVER_URL ??
-    (process.env.NODE_ENV === "development" ? "http://localhost:8000" : undefined);
+    (process.env.NODE_ENV === "development" ? "http://localhost:8001" : undefined);
 
   if (!backendUrl) {
     return Response.json({ message: "The API service is not configured." }, { status: 503 });
@@ -31,13 +31,18 @@ async function proxyApiRequest(request: NextRequest) {
     if (!hopByHopHeaders.has(key.toLowerCase())) headers.set(key, value);
   });
 
-  const upstreamResponse = await fetch(upstreamUrl, {
-    method: request.method,
-    headers,
-    body: request.method === "GET" || request.method === "HEAD" ? undefined : await request.arrayBuffer(),
-    cache: "no-store",
-    redirect: "manual",
-  });
+  let upstreamResponse: Response;
+  try {
+    upstreamResponse = await fetch(upstreamUrl, {
+      method: request.method,
+      headers,
+      body: request.method === "GET" || request.method === "HEAD" ? undefined : await request.arrayBuffer(),
+      cache: "no-store",
+      redirect: "manual",
+    });
+  } catch {
+    return Response.json({ message: "Backend API lama heli karo. Hubi in server-ku socdo." }, { status: 502 });
+  }
 
   const responseHeaders = new Headers();
   upstreamResponse.headers.forEach((value, key) => {
