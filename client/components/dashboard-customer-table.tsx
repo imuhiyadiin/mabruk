@@ -16,7 +16,7 @@ type OrderResponse = { message?: string; result?: OrderRecord[] };
 type CustomerSummary = Customer & { orderCount: number; totalSpent: number; lastOrder: string };
 
 function getApiBase() {
-  return (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api").replace(/\/$/, "");
+  return "/api";
 }
 
 function getCustomer(order: OrderRecord) {

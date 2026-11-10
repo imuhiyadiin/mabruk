@@ -46,7 +46,7 @@ const categoryFilters = ["All Categories", "With Products", "Empty Categories"] 
 type CategoryFilter = (typeof categoryFilters)[number];
 
 function getApiBase() {
-  return (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api").replace(/\/$/, "");
+  return "/api";
 }
 
 function CategoryStat({

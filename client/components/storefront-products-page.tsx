@@ -18,7 +18,7 @@ type Product = {
 type Category = { id: string; name: string };
 type Payload<T> = { result?: T };
 
-const apiBase = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api").replace(/\/$/, "");
+const apiBase = "/api";
 
 export default function StorefrontProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);

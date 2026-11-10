@@ -12,7 +12,7 @@ const app = express();
 dotenv.config();
  
 app.use(express.json());
-const PORT = 8000;
+const PORT = Number(process.env.PORT ?? 8000);
 
 app.use(cors())
    
@@ -30,4 +30,8 @@ app.use("/api/admin", admin);
 // app.use("/api/cart", cart);
 // app.use("/api/order", order);
 
-app.listen(PORT, () => console.log(`server is running ${PORT}`));
+if (process.env.VERCEL !== "1") {
+  app.listen(PORT, () => console.log(`server is running ${PORT}`));
+}
+
+export default app;

@@ -28,7 +28,7 @@ const orderStatuses = ["All Orders", "Pending", "Processing", "Shipped", "Delive
 type OrderStatus = (typeof orderStatuses)[number];
 
 function getApiBase() {
-  return (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api").replace(/\/$/, "");
+  return "/api";
 }
 
 function getOrderItems(items: unknown[] = []): OrderItem[] {

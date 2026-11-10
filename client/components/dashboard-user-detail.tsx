@@ -22,7 +22,7 @@ const permissionGroups: PermissionGroup[] = [
 
 const allPermissionIds = permissionGroups.flatMap((group) => group.items.map((item) => item.id));
 const defaultUserPermissions = ["dashboard.view", "products.view", "categories.view", "orders.view", "customers.view"];
-const apiBase = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api").replace(/\/$/, "");
+const apiBase = "/api";
 
 function getToken() {
   const storedUser = window.localStorage.getItem("user-data");

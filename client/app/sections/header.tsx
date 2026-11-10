@@ -34,7 +34,7 @@ type StoreProduct = {
 type ProductsPayload = { result?: StoreProduct[] };
 type StoreCategory = { id: string; name: string };
 type CategoriesPayload = { result?: StoreCategory[] };
-const apiBase = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api").replace(/\/$/, "");
+const apiBase = "/api";
 
 const navigation: { label: string; href: string; hasMenu?: boolean }[] = [
   { label: "HOME", href: "/" },

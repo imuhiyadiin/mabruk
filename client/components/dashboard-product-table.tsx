@@ -50,7 +50,7 @@ type ProductFilter = "All Products" | "In Stock" | "Out of Stock" | "Low Stock";
 const filters: ProductFilter[] = ["All Products", "In Stock", "Out of Stock", "Low Stock"];
 
 function getApiBase() {
-  return (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api").replace(/\/$/, "");
+  return "/api";
 }
 
 function MetricCard({

@@ -9,7 +9,7 @@ type UsersResponse = { message?: string; result?: UserRecord[] };
 type RoleFilter = "ALL" | "ADMIN" | "USER";
 
 function getApiBase() {
-  return (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api").replace(/\/$/, "");
+  return "/api";
 }
 
 export default function DashboardUsersRolesTable() {

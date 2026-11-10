@@ -163,9 +163,7 @@ export default function SignInPage() {
     setIsSubmitting(true);
 
     try {
-      const apiBase = (
-        process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"
-      ).replace(/\/$/, "");
+      const apiBase = "/api";
       const endpoint = isSignUp ? "/user" : "/user/login";
       const body = isSignUp
         ? { name: fullName, email, password }
@@ -210,9 +208,7 @@ export default function SignInPage() {
     setIsSubmitting(true);
 
     try {
-      const apiBase = (
-        process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"
-      ).replace(/\/$/, "");
+      const apiBase = "/api";
       const response = await fetch(`${apiBase}/user/google-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -16,7 +16,7 @@ type Product = {
   category?: { id?: string; name?: string } | null;
 };
 type Payload<T> = { result?: T; message?: string };
-const apiBase = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api").replace(/\/$/, "");
+const apiBase = "/api";
 
 export default function StorefrontProductDetail({ slug }: { slug: string }) {
   const [product, setProduct] = useState<Product | null>(null);

@@ -24,7 +24,7 @@ type ApiResponse<T> = { message?: string; result?: T };
 const blankStats: AnalyticsStats = { totalUsers: 0, totalProducts: 0, totalOrders: 0, pendingOrders: 0, completedOrders: 0, cancelledOrders: 0, totalCategories: 0, totalRevenue: 0, weeklyRevenue: [] };
 
 function apiBase() {
-  return (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api").replace(/\/$/, "");
+  return "/api";
 }
 
 async function readApiResponse<T>(response: Response, endpoint: string): Promise<ApiResponse<T>> {

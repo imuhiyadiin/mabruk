@@ -11,7 +11,7 @@ type OrderItem = { productName?: string; quantity?: number; quanity?: number; pr
 type Order = { id: string; totalAmount: number; status?: string; createdAt: string; user?: { fullname?: string; email?: string }; items?: unknown[] };
 type Payload<T> = { result?: T; message?: string };
 
-const api = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api").replace(/\/$/, "");
+const api = "/api";
 const colors = ["#f59e0b", "#f97316", "#d1d5db", "#9ca3af", "#27272a", "#facc15"];
 
 async function readPayload<T>(response: Response, endpoint: string): Promise<Payload<T>> {
