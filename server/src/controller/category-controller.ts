@@ -14,14 +14,15 @@ export const createCategory = async (req: AuthRequest, res: Response) => {
     }
 
     const { name, description, image } = req.body;
-    if (!name) {
+    const categoryName = typeof name === "string" ? name.trim() : "";
+    if (!categoryName) {
       return res.status(400).json({
         message: "enter name of category",
       });
     }
 
     const existCatory = await prisma.category.findFirst({
-      where: { name },
+      where: { name: categoryName },
     });
 
     if (existCatory) {
@@ -32,9 +33,9 @@ export const createCategory = async (req: AuthRequest, res: Response) => {
 
     const newCatefory = await prisma.category.create({
       data: {
-        name,
-        description,
-        imageUrl: image,
+        name: categoryName,
+        description: typeof description === "string" ? description.trim() || null : null,
+        imageUrl: typeof image === "string" ? image.trim() || null : null,
         userId: req.user?.id!,
       },
     });
