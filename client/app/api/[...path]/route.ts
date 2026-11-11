@@ -34,6 +34,9 @@ async function proxyApiRequest(request: NextRequest) {
   request.headers.forEach((value, key) => {
     if (!hopByHopHeaders.has(key.toLowerCase())) headers.set(key, value);
   });
+  // The server-to-server fetch can transparently decompress upstream data.
+  // Ask the backend for an identity response to avoid forwarding stale gzip metadata.
+  headers.set("accept-encoding", "identity");
 
   let upstreamResponse: Response;
   try {
