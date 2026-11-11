@@ -15,6 +15,10 @@ const hopByHopHeaders = new Set([
   "upgrade",
 ]);
 
+// Fetch transparently decompresses upstream responses, so do not forward a
+// content-encoding header that would make the browser try to decompress again.
+const responseHeadersToOmit = new Set([...hopByHopHeaders, "content-encoding"]);
+
 async function proxyApiRequest(request: NextRequest) {
   const backendUrl =
     process.env.SERVER_URL ??
@@ -46,7 +50,7 @@ async function proxyApiRequest(request: NextRequest) {
 
   const responseHeaders = new Headers();
   upstreamResponse.headers.forEach((value, key) => {
-    if (!hopByHopHeaders.has(key.toLowerCase())) responseHeaders.set(key, value);
+    if (!responseHeadersToOmit.has(key.toLowerCase())) responseHeaders.set(key, value);
   });
 
   return new Response(upstreamResponse.body, {
