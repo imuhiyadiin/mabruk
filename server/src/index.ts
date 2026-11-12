@@ -14,8 +14,17 @@ dotenv.config();
 app.use(express.json());
 const PORT = Number(process.env.PORT ?? 8000);
 
-app.use(cors())
-   
+app.use(cors({
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "http://localhost:3000",
+      "https://mabruk-oekr.vercel.app",
+      process.env.CLIENT_URL,
+    ].filter((value): value is string => Boolean(value));
+    callback(null, !origin || allowedOrigins.includes(origin));
+  },
+}));
+
 // app.get("/api", (req, res) => {
 //   res.json("Hello server");
 // });

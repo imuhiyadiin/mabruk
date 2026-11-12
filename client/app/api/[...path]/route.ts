@@ -22,11 +22,9 @@ const responseHeadersToOmit = new Set([...hopByHopHeaders, "content-encoding"]);
 async function proxyApiRequest(request: NextRequest) {
   const backendUrl =
     process.env.SERVER_URL ??
-    (process.env.NODE_ENV === "development" ? "http://localhost:8001" : undefined);
-
-  if (!backendUrl) {
-    return Response.json({ message: "The API service is not configured." }, { status: 503 });
-  }
+    (process.env.NODE_ENV === "development"
+      ? "http://localhost:8001"
+      : process.env.NEXT_PUBLIC_API_URL ?? "https://mabruk-1.vercel.app/api");
 
   const upstreamUrl = new URL(`${request.nextUrl.pathname}${request.nextUrl.search}`, backendUrl);
   const headers = new Headers();
